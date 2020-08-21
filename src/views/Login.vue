@@ -36,19 +36,21 @@
         </b-field>
       </ValidationProvider>
 
-      <button
-        class="button is-primary"
+      <b-button
+        class="button is-primary mt-4"
         type="submit"
-        @click="handleSubmit(login)"
+        :loading="loading"
+        @click="handleSubmit(submit)"
       >
         Login
-      </button>
+      </b-button>
     </section>
   </ValidationObserver>
 </template>
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
+import { mapActions } from "vuex";
 
 export default {
   name: "login",
@@ -59,10 +61,34 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    loading: false,
   }),
   methods: {
-    login() {
-      console.log("login");
+    ...mapActions("user", ["login"]),
+    submit() {
+      this.loading = true;
+      const { email, password } = this;
+      this.login({ email, password })
+        .then(() => {
+          this.$buefy.snackbar.open({
+            message: "Успешная авторизация!",
+            position: "is-top-left",
+            duration: 2000,
+          });
+          this.$router.push("/");
+        })
+        .catch(() => {
+          this.$buefy.snackbar.open({
+            message: "Неверный логин и/или пароль",
+            position: "is-top-left",
+            type: "is-danger",
+            duration: 2000,
+            queue: false,
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };
