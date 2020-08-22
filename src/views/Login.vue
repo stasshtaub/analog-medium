@@ -77,9 +77,22 @@ export default {
           });
           this.$router.push("/");
         })
-        .catch(() => {
+        .catch((err) => {
+          let message = "";
+          if (err.response) {
+            switch (err.response.status) {
+              case 401:
+                message = "Неверный логин и/или пароль";
+                break;
+              default:
+                message = `Что-то пошло не так. Код ошибки: ${err.response.status}`;
+                break;
+            }
+          } else {
+            message = "Что-то пошло не так";
+          }
           this.$buefy.snackbar.open({
-            message: "Неверный логин и/или пароль",
+            message,
             position: "is-top-left",
             type: "is-danger",
             duration: 2000,

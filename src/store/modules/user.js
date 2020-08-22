@@ -25,7 +25,12 @@ export default {
               commit("setUser", user);
               resolve();
             } else {
-              reject();
+              const err = {
+                response: {
+                  status: 401,
+                },
+              };
+              reject(err);
             }
           })
           .catch((err) => {
