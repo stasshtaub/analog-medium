@@ -14,7 +14,7 @@
         <div class="buttons" v-if="isAuth">
           <b-button
             tag="router-link"
-            :to="`/edit/${post.id}`"
+            :to="{ name: 'Edit', params: { id: post.id, post } }"
             class="button is-light mr-4"
             v-if="isAuthor"
           >

@@ -2,7 +2,7 @@
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
     <section class="section">
       <h1 class="title has-text-centered has-text-dark">
-        {{ post ? "Редактирование" : "Создание" }} поста
+        {{ $route.params.post ? "Редактирование" : "Создание" }} поста
       </h1>
       <ValidationProvider
         rules="required"
@@ -33,7 +33,7 @@
       </ValidationProvider>
 
       <div class="field is-grouped mt-4">
-        <template v-if="post">
+        <template v-if="$route.params.post">
           <div class="control">
             <b-button class="button" @click="cancel">
               Cancel
@@ -66,38 +66,28 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { mapActions } from "vuex";
-import Axios from "axios";
+import alert from "../mixins/alert";
 
 export default {
   name: "post-management",
-  props: {
-    id: {
-      type: Number,
-      default: null,
-    },
-  },
   data: () => ({
     loading: false,
     title: "",
     description: "",
-    post: null,
   }),
   components: {
     ValidationObserver,
     ValidationProvider,
   },
+  mixins: [alert],
   methods: {
     ...mapActions("post", ["updatePost", "createPost", "fetchPost"]),
     save() {
       this.loading = true;
       const { title, description } = this;
-      this.updatePost({ id: this.post.id, title, description })
+      this.updatePost({ id: this.$route.params.post.id, title, description })
         .then(() => {
-          this.$buefy.snackbar.open({
-            message: "Пост успешно изменён!",
-            position: "is-top-left",
-            duration: 2000,
-          });
+          this.alert("Пост успешно изменён!");
           this.$router.push("/");
         })
         .catch((err) => {
@@ -105,13 +95,7 @@ export default {
           if (err.response) {
             message += `. Код ошибки: ${err.response.status}`;
           }
-          this.$buefy.snackbar.open({
-            message,
-            position: "is-top-left",
-            type: "is-danger",
-            duration: 2000,
-            queue: false,
-          });
+          this.alert(message, "is-danger");
         })
         .finally(() => {
           this.loading = false;
@@ -122,11 +106,7 @@ export default {
       const { title, description } = this;
       this.createPost({ title, description })
         .then(() => {
-          this.$buefy.snackbar.open({
-            message: "Пост создан!",
-            position: "is-top-left",
-            duration: 2000,
-          });
+          this.alert("Пост создан!");
           this.$router.push("/");
         })
         .catch((err) => {
@@ -134,13 +114,7 @@ export default {
           if (err.response) {
             message += `. Код ошибки: ${err.response.status}`;
           }
-          this.$buefy.snackbar.open({
-            message,
-            position: "is-top-left",
-            type: "is-danger",
-            duration: 2000,
-            queue: false,
-          });
+          this.alert(message, "is-danger");
         })
         .finally(() => {
           this.loading = false;
@@ -152,16 +126,11 @@ export default {
     },
   },
   async created() {
-    if (this.id) {
-      await Axios.get(`http://localhost:3000/posts/${this.id}`).then((resp) => {
-        this.post = resp.data;
-        const { title, description } = this.post;
-        this.title = title;
-        this.description = description;
-      });
+    if (this.$route.params.post) {
+      const { title, description } = this.$route.params.post;
+      this.title = title;
+      this.description = description;
     }
   },
 };
 </script>
-
-<style></style>

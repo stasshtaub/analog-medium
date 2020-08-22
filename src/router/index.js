@@ -25,9 +25,14 @@ const routes = [
     path: "/edit/:id",
     name: "Edit",
     component: () => import("../views/PostManagement.vue"),
-    props: (route) => ({
-      id: +route.params.id,
-    }),
+    props: (route) => {
+      console.log("params:", route.params);
+
+      return {
+        id: +route.params.id,
+        post: route.params.post,
+      };
+    },
     meta: {
       middleware: [post],
     },
