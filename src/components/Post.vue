@@ -11,14 +11,18 @@
       </div>
       <footer class="post__footer card-footer pt-4">
         <p class="is-half">{{ daysAgo }} дня назад</p>
-        <div class="buttons">
-          <button class="button is-light mr-4">
+        <div class="buttons" v-if="isAuth">
+          <button class="button is-light mr-4" v-if="isAuthor">
             <b-icon icon="square-edit-outline"> </b-icon>
-            <span>Изменить</span>
+            <span class="ml-2">Изменить</span>
           </button>
-          <button class="button is-light">
+          <button class="button is-light" v-if="isAuthor">
             <b-icon icon="delete"> </b-icon>
-            <span>Удалить</span>
+            <span class="ml-2">Удалить</span>
+          </button>
+          <button class="button is-light" v-if="isReader">
+            <b-icon icon="thumb-up"> </b-icon>
+            <span class="ml-2">{{post.claps}}</span>
           </button>
         </div>
       </footer>
@@ -27,14 +31,23 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "post",
   props: {
-    post: { type: Object, default: () => ({}) },
+    post: { type: Object, default: () => ({}) }, // {id: <Number>, title: <String>, description: <String>, claps: <Number>, createdAt: <String>, updateAt: <String>, userId: <Number>}
   },
   computed: {
+    ...mapGetters("user", ["user", "isAuth"]),
     daysAgo() {
       return 2;
+    },
+    isAuthor() {
+      return this.post.userId == this.user.id;
+    },
+    isReader() {
+      return this.user.role == "reader";
     },
   },
 };
