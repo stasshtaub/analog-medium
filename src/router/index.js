@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Feed from "../views/Feed.vue";
 import store from "../store";
 import guest from "./middleware/guest";
+import post from "./middleware/post";
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,17 @@ const routes = [
     component: () => import("../views/Login.vue"),
     meta: {
       middleware: [guest],
+    },
+  },
+  {
+    path: "/edit/:id",
+    name: "Edit",
+    component: () => import("../views/PostManagement.vue"),
+    props: (route) => ({
+      id: +route.params.id,
+    }),
+    meta: {
+      middleware: [post],
     },
   },
 ];

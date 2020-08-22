@@ -13,6 +13,15 @@ export default {
         state.total = +total;
       }
     },
+    updatePost(state, { id, title, description, updateAt }) {
+      const post = state.posts.find((post) => (post.id = id));
+      post.title = title;
+      post.description = description;
+      post.updateAt = updateAt;
+    },
+    createPost(state, post) {
+      state.posts.push(post);
+    },
   },
   actions: {
     fetchPosts({ commit }, { page, limit }) {
@@ -34,7 +43,36 @@ export default {
           });
       });
     },
-    fetchPost() {},
+    updatePost({ commit }, { id, title, description }) {
+      const updateAt = new Date().toISOString();
+      const data = { title, description, updateAt };
+      return new Promise((resolve, reject) => {
+        axios
+          .patch(`http://localhost:3000/posts/${id}`, data)
+          .then(() => {
+            commit("updatePost", { id, ...data });
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    createPost({ commit }, { title, description }) {
+      const createdAt = new Date().toISOString();
+      const data = { title, description, createdAt, updateAt: createdAt };
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`http://localhost:3000/posts`, data)
+          .then((resp) => {
+            commit("createPost", { id: resp.data.id, ...data });
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
   },
   getters: {
     posts: (s) => s.posts,

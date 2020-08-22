@@ -12,10 +12,15 @@
       <footer class="post__footer card-footer pt-4">
         <p class="is-half has-text-grey-light">{{ timeAgo }} назад</p>
         <div class="buttons" v-if="isAuth">
-          <button class="button is-light mr-4" v-if="isAuthor">
+          <b-button
+            tag="router-link"
+            :to="`/edit/${post.id}`"
+            class="button is-light mr-4"
+            v-if="isAuthor"
+          >
             <b-icon icon="square-edit-outline"> </b-icon>
             <span class="ml-2">Изменить</span>
-          </button>
+          </b-button>
           <button class="button is-light" v-if="isAuthor">
             <b-icon icon="delete"> </b-icon>
             <span class="ml-2">Удалить</span>
