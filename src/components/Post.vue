@@ -10,7 +10,7 @@
         {{ post.description }}
       </div>
       <footer class="post__footer card-footer pt-4">
-        <p class="is-half">{{ daysAgo }} дня назад</p>
+        <p class="is-half has-text-grey-light">{{ timeAgo }} назад</p>
         <div class="buttons" v-if="isAuth">
           <button class="button is-light mr-4" v-if="isAuthor">
             <b-icon icon="square-edit-outline"> </b-icon>
@@ -22,7 +22,7 @@
           </button>
           <button class="button is-light" v-if="isReader">
             <b-icon icon="thumb-up"> </b-icon>
-            <span class="ml-2">{{post.claps}}</span>
+            <span class="ml-2">{{ post.claps }}</span>
           </button>
         </div>
       </footer>
@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import moment from "../plugins/moment";
 
 export default {
   name: "post",
@@ -40,8 +41,8 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["user", "isAuth"]),
-    daysAgo() {
-      return 2;
+    timeAgo() {
+      return moment.duration(moment().diff(this.post.createdAt)).humanize();
     },
     isAuthor() {
       return this.post.userId == this.user.id;
@@ -50,6 +51,7 @@ export default {
       return this.user.role == "reader";
     },
   },
+  mounted() {},
 };
 </script>
 
