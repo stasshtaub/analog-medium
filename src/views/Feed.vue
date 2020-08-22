@@ -1,7 +1,10 @@
 <template>
   <div class="feed">
     <posts-list v-if="posts.length" :posts="posts" />
-    <p v-else-if="!loading">Постов нет</p>
+    <b-loading :is-full-page="false" v-model="loading"></b-loading>
+    <div class="box" v-if="!loading && !posts.length">
+      <p class="content has-text-centered">Постов нет</p>
+    </div>
     <pagination
       v-if="total > 10"
       :total="total"
@@ -46,3 +49,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.feed {
+  min-height: 100px;
+}
+</style>
