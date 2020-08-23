@@ -13,11 +13,9 @@ export default {
         state.total = +total;
       }
     },
-    updatePost(state, { id, title, description, updateAt }) {
-      const post = state.posts.find((post) => (post.id = id));
-      post.title = title;
-      post.description = description;
-      post.updateAt = updateAt;
+    updatePost(state, post) {
+      const index = state.posts.findIndex((p) => p.id == post.id);
+      state.posts[index] = { ...state.posts[index], ...post };
     },
     createPost(state, post) {
       state.posts.push(post);
@@ -36,7 +34,6 @@ export default {
             resolve();
           })
           .catch((err) => {
-            console.log(err);
             reject(err);
           });
       });
@@ -47,8 +44,8 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(`/posts/${id}`, data)
-          .then(() => {
-            commit("updatePost", { id, ...data });
+          .then((resp) => {
+            commit("updatePost", resp.data);
             resolve();
           })
           .catch((err) => {
