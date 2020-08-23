@@ -53,9 +53,15 @@ export default {
           });
       });
     },
-    createPost({ commit }, { title, description }) {
+    createPost({ commit, rootState }, { title, description }) {
       const createdAt = new Date().toISOString();
-      const data = { title, description, createdAt, updateAt: createdAt };
+      const data = {
+        title,
+        description,
+        createdAt,
+        updateAt: createdAt,
+        userId: rootState.user.user.id,
+      };
       return new Promise((resolve, reject) => {
         axios
           .post(`/posts`, data)
