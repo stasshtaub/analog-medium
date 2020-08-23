@@ -38,12 +38,12 @@ export default {
           });
       });
     },
-    updatePost({ commit }, { id, title, description }) {
+    updatePost({ commit }, post) {
       const updateAt = new Date().toISOString();
-      const data = { title, description, updateAt };
+
       return new Promise((resolve, reject) => {
         axios
-          .patch(`/posts/${id}`, data)
+          .patch(`/posts/${post.id}`, { ...post, updateAt })
           .then((resp) => {
             commit("updatePost", resp.data);
             resolve();
