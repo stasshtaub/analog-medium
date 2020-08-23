@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../plugins/axios";
 
 export default {
   namespaced: true,
@@ -18,7 +18,7 @@ export default {
     async login({ commit }, { email, password }) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://localhost:3000/users?login=${email}`)
+          .get(`/users?login=${email}`)
           .then((resp) => {
             const user = resp.data[0];
             if (user && user.password == password) {

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../plugins/axios";
 
 export default {
   namespaced: true,
@@ -27,9 +27,7 @@ export default {
     fetchPosts({ commit }, { page, limit }) {
       return new Promise((resolve, reject) => {
         axios
-          .get(
-            `http://localhost:3000/posts?_page=${page}&_limit=${limit}&_sort=id&_order=desc`
-          )
+          .get(`/posts?_page=${page}&_limit=${limit}&_sort=id&_order=desc`)
           .then((resp) => {
             commit("setPosts", {
               posts: resp.data,
@@ -48,7 +46,7 @@ export default {
       const data = { title, description, updateAt };
       return new Promise((resolve, reject) => {
         axios
-          .patch(`http://localhost:3000/posts/${id}`, data)
+          .patch(`/posts/${id}`, data)
           .then(() => {
             commit("updatePost", { id, ...data });
             resolve();
@@ -63,7 +61,7 @@ export default {
       const data = { title, description, createdAt, updateAt: createdAt };
       return new Promise((resolve, reject) => {
         axios
-          .post(`http://localhost:3000/posts`, data)
+          .post(`/posts`, data)
           .then((resp) => {
             commit("createPost", { id: resp.data.id, ...data });
             resolve();
