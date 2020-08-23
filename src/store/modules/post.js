@@ -20,6 +20,9 @@ export default {
     createPost(state, post) {
       state.posts.push(post);
     },
+    deletePost(state, id) {
+      state.posts = state.posts.filter((p) => p.id !== id);
+    },
   },
   actions: {
     fetchPosts({ commit }, { page, limit }) {
@@ -67,6 +70,19 @@ export default {
           .post(`/posts`, data)
           .then((resp) => {
             commit("createPost", { id: resp.data.id, ...data });
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    deletePost({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`/posts/${id}`)
+          .then(() => {
+            commit("deletePost", id);
             resolve();
           })
           .catch((err) => {

@@ -21,10 +21,14 @@
             <b-icon icon="square-edit-outline"> </b-icon>
             <span class="ml-2">Изменить</span>
           </b-button>
-          <button class="button is-light" v-if="isAuthor">
+          <b-button
+            class="button is-light"
+            v-if="isAuthor"
+            @click="$emit('delete', post.id)"
+          >
             <b-icon icon="delete"> </b-icon>
             <span class="ml-2">Удалить</span>
-          </button>
+          </b-button>
           <b-button
             class="button is-primary"
             v-if="isReader"
@@ -75,7 +79,6 @@ export default {
       return this.post.userId == this.user.id;
     },
   },
-  mounted() {},
 };
 </script>
 
