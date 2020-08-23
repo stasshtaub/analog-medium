@@ -4,7 +4,7 @@ import Feed from "../views/Feed.vue";
 import store from "../store";
 import guest from "./middleware/guest";
 import writer from "./middleware/writer";
-import post from "./middleware/post";
+// import post from "./middleware/post";
 
 Vue.use(VueRouter);
 
@@ -25,23 +25,21 @@ const routes = [
   {
     path: "/edit/:id",
     name: "Edit",
-    component: () => import("../views/PostManagement.vue"),
+    component: () => import("../views/Edit.vue"),
     props: (route) => {
-      console.log("params:", route.params);
-
       return {
         id: +route.params.id,
         post: route.params.post,
       };
     },
     meta: {
-      middleware: [post],
+      middleware: [writer],
     },
   },
   {
     path: "/create",
     name: "Create",
-    component: () => import("../views/PostManagement.vue"),
+    component: () => import("../views/Create.vue"),
     meta: {
       middleware: [writer],
     },

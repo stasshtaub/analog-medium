@@ -1,6 +1,6 @@
-import Axios from "axios";
+import Axios from "../../plugins/axios";
 
-export default async function check({ to, next, store }) {
+export default async function author({ to, next, store }) {
   let allowed = false;
   let post = null;
 
@@ -8,17 +8,18 @@ export default async function check({ to, next, store }) {
     if (to.params.post) {
       post = to.params.post;
     } else {
-      await Axios.get(`http://localhost:3000/posts/${to.params.id}`).then(
-        (resp) => {
-          post = resp.data;
-        }
-      );
+      console.log("получаем пост");
+
+      await Axios.get(`/posts/${to.params.id}`).then((resp) => {
+        post = resp.data;
+        console.log("получили пост", post);
+      });
     }
     allowed = store.getters["user/user"].id == post.userId;
   }
 
   if (allowed) {
-    return next({ params: { post } });
+    return next({ params: { a: 1, b: 2 } });
   }
   return next({
     name: "Feed",
