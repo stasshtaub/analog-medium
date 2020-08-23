@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Feed from "../views/Feed.vue";
 import store from "../store";
 import guest from "./middleware/guest";
+import writer from "./middleware/writer";
 import post from "./middleware/post";
 
 Vue.use(VueRouter);
@@ -35,6 +36,14 @@ const routes = [
     },
     meta: {
       middleware: [post],
+    },
+  },
+  {
+    path: "/create",
+    name: "Create",
+    component: () => import("../views/PostManagement.vue"),
+    meta: {
+      middleware: [writer],
     },
   },
 ];

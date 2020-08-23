@@ -45,5 +45,6 @@ export default {
   getters: {
     user: (s) => s.user,
     isAuth: (s) => !!s.user,
+    isWriter: (s) => !!s.user && s.user.role === "writer",
   },
 };
