@@ -45,15 +45,12 @@ export default {
     post: { type: Object, default: () => ({}) }, // {id: <Number>, title: <String>, description: <String>, claps: <Number>, createdAt: <String>, updateAt: <String>, userId: <Number>}
   },
   computed: {
-    ...mapGetters("user", ["user", "isAuth"]),
+    ...mapGetters("user", ["user", "isAuth", "isReader"]),
     timeAgo() {
       return moment.duration(moment().diff(this.post.createdAt)).humanize();
     },
     isAuthor() {
       return this.post.userId == this.user.id;
-    },
-    isReader() {
-      return this.user.role == "reader";
     },
   },
   mounted() {},
