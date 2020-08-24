@@ -45,8 +45,6 @@ export default {
   methods: {
     confirm() {
       this.loading = true;
-      // console.log(this.onConfirm());
-
       this.onConfirm().finally(() => {
         this.loading = false;
       });

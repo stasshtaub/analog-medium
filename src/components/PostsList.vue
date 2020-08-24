@@ -44,8 +44,6 @@ export default {
     onDeleteCLick(id) {
       this.isModalActive = true;
       this.modalProps.onConfirm = async () => {
-        console.log("in onConfirm");
-
         return await this.deletePost(id)
           .then(() => {
             this.alert("Пост успешно удалён");
