@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start-json-server": "json-server --watch db.json --port 3000 --delay 1000"
+    "start-json-server": "json-server --watch db.json --port 3000 --delay 200"
   },
   "dependencies": {
     "axios": "^0.19.2",
