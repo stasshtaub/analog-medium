@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-    <form class="section is-mdeium">
+    <form class="section" @submit.prevent="handleSubmit(submit)">
       <h1 class="title has-text-centered has-text-dark">Login</h1>
       <ValidationProvider
         rules="required|email"
@@ -36,12 +36,7 @@
         </b-field>
       </ValidationProvider>
 
-      <b-button
-        class="button is-primary mt-4"
-        type="submit"
-        :loading="loading"
-        @click="handleSubmit(submit)"
-      >
+      <b-button class="button is-primary mt-4" native-type="submit" :loading="loading">
         Login
       </b-button>
     </form>

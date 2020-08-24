@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-    <section class="section">
+    <form class="section" @submit.prevent="handleSubmit(save)">
       <h1 class="title has-text-centered has-text-dark">
         {{ $route.params.post ? "Редактирование" : "Создание" }} поста
       </h1>
@@ -46,13 +46,13 @@
           <b-button
             class="button is-primary"
             :loading="loading"
-            @click="handleSubmit(save)"
+            native-type="submit"
           >
             Save
           </b-button>
         </div>
       </div>
-    </section>
+    </form>
   </ValidationObserver>
 </template>
 
