@@ -19,9 +19,11 @@ export default {
     },
     createPost(state, post) {
       state.posts.push(post);
+      state.total++;
     },
     deletePost(state, id) {
       state.posts = state.posts.filter((p) => p.id !== id);
+      state.total--;
     },
   },
   actions: {

@@ -28,7 +28,11 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
         >
-          <b-input v-model="description" placeholder="Description"></b-input>
+          <b-input
+            v-model="description"
+            type="textarea"
+            placeholder="Description"
+          ></b-input>
         </b-field>
       </ValidationProvider>
 

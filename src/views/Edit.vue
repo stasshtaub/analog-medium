@@ -30,6 +30,7 @@
         >
           <b-input
             v-model="editedPost.description"
+            type="textarea"
             placeholder="Description"
           ></b-input>
         </b-field>
