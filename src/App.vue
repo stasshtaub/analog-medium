@@ -9,12 +9,26 @@
 
 <script>
 import Navbar from "./components/Navbar";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "App",
   components: {
     Navbar,
   },
+  methods: {
+    ...mapActions("user", ["signin", "logout"]),
+  },
+  computed: {
+    ...mapGetters("user", ["isAuth", "token"]),
+  },
+  created() {
+    if (this.isAuth) {
+      const { login, password } = this.token;
+      this.signin({ login, password }).catch(() => {
+        this.logout();
+      });
+    }
+  },
 };
 </script>
-
-<style lang="scss"></style>

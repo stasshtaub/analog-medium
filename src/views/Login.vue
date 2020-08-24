@@ -1,10 +1,10 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-    <section class="section">
+    <form class="section is-mdeium">
       <h1 class="title has-text-centered has-text-dark">Login</h1>
       <ValidationProvider
         rules="required|email"
-        name="Email"
+        name="login"
         v-slot="{ errors, valid }"
       >
         <b-field
@@ -12,7 +12,7 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
         >
-          <b-input v-model="email" type="email" placeholder="E-Mail"> </b-input>
+          <b-input v-model="login" type="email" placeholder="E-Mail"> </b-input>
         </b-field>
       </ValidationProvider>
 
@@ -44,7 +44,7 @@
       >
         Login
       </b-button>
-    </section>
+    </form>
   </ValidationObserver>
 </template>
 
@@ -59,16 +59,16 @@ export default {
     ValidationProvider,
   },
   data: () => ({
-    email: "",
+    login: "",
     password: "",
     loading: false,
   }),
   methods: {
-    ...mapActions("user", ["login"]),
+    ...mapActions("user", ["signin"]),
     submit() {
       this.loading = true;
-      const { email, password } = this;
-      this.login({ email, password })
+      const { login, password } = this;
+      this.signin({ login, password })
         .then(() => {
           this.$buefy.snackbar.open({
             message: "Успешная авторизация!",
