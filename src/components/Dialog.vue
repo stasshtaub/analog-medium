@@ -11,18 +11,14 @@
       <footer class="modal-card-foot">
         <div class="field is-grouped mt-4">
           <div class="control">
-            <b-button class="button" @click="$emit('close')">
-              {{ cancelText }}
-            </b-button>
+            <b-button class="button" @click="$emit('close')">{{ cancelText }}</b-button>
           </div>
           <div class="control">
             <b-button
               class="button is-primary"
               @click="confirm"
               :loading="loading"
-            >
-              {{ confirmText }}
-            </b-button>
+            >{{ confirmText }}</b-button>
           </div>
         </div>
       </footer>
@@ -43,11 +39,10 @@ export default {
     loading: false,
   }),
   methods: {
-    confirm() {
+    async confirm() {
       this.loading = true;
-      this.onConfirm().finally(() => {
-        this.loading = false;
-      });
+      await this.onConfirm();
+      this.loading = false;
     },
   },
 };

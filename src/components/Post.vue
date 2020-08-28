@@ -6,9 +6,7 @@
           <p class="title is-4">{{ post.title }}</p>
         </div>
       </div>
-      <div class="content">
-        {{ post.description }}
-      </div>
+      <div class="content">{{ post.description }}</div>
       <footer class="post__footer card-footer pt-4">
         <p class="is-half has-text-grey-light">{{ timeAgo }} назад</p>
         <div class="buttons" v-if="isAuth">
@@ -18,24 +16,15 @@
             class="button is-light mr-4"
             v-if="isAuthor"
           >
-            <b-icon icon="square-edit-outline"> </b-icon>
+            <b-icon icon="square-edit-outline"></b-icon>
             <span class="ml-2">Изменить</span>
           </b-button>
-          <b-button
-            class="button is-light"
-            v-if="isAuthor"
-            @click="$emit('delete', post.id)"
-          >
-            <b-icon icon="delete"> </b-icon>
+          <b-button class="button is-light" v-if="isAuthor" @click="$emit('delete', post.id)">
+            <b-icon icon="delete"></b-icon>
             <span class="ml-2">Удалить</span>
           </b-button>
-          <b-button
-            class="button is-primary"
-            v-if="isReader"
-            @click="clap"
-            :loading="clapLoading"
-          >
-            <b-icon icon="thumb-up"> </b-icon>
+          <b-button class="button is-primary" v-if="isReader" @click="clap" :loading="clapLoading">
+            <b-icon icon="thumb-up"></b-icon>
             <span class="ml-2">{{ post.claps }}</span>
           </b-button>
         </div>
@@ -47,6 +36,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import moment from "../plugins/moment";
+import alert from "../mixins/alert";
 
 export default {
   name: "post",
@@ -56,18 +46,19 @@ export default {
   data: () => ({
     clapLoading: false,
   }),
+  mixins: [alert],
   methods: {
     ...mapActions("post", ["updatePost"]),
-    clap() {
+    async clap() {
       this.clapLoading = true;
-      const { id, claps } = this.post;
-      this.updatePost({ id, claps: claps + 1 })
-        .then(() => {
-          this.post.claps++;
-        })
-        .finally(() => {
-          this.clapLoading = false;
-        });
+      try {
+        const { id, claps } = this.post;
+        await this.updatePost({ id, claps: claps + 1 });
+        this.post.claps++;
+      } catch (err) {
+        this.alert("Не удалось хлопнуть", "is-danger");
+      }
+      this.clapLoading = false;
     },
   },
   computed: {

@@ -44,15 +44,17 @@ export default {
     onDeleteCLick(id) {
       this.isModalActive = true;
       this.modalProps.onConfirm = async () => {
-        return await this.deletePost(id)
-          .then(() => {
-            this.alert("Пост успешно удалён");
-            this.isModalActive = false;
-          })
-          .catch(() => {
-            this.alert("Не удалось удалить пост", "is-danger");
-          });
+        await this.delete(id);
       };
+    },
+    async delete(id) {
+      try {
+        await this.deletePost(id);
+        this.alert("Пост успешно удалён");
+        this.isModalActive = false;
+      } catch (err) {
+        this.alert("Не удалось удалить пост", "is-danger");
+      }
     },
   },
   props: {

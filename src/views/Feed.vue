@@ -5,12 +5,7 @@
     <div class="box" v-if="!loading && !posts.length">
       <p class="content has-text-centered">Постов нет</p>
     </div>
-    <pagination
-      v-if="total > 10"
-      :total="total"
-      :currentInit="page"
-      @change="pageChange"
-    />
+    <pagination v-if="total > 10" :total="total" :currentInit="page" @change="pageChange" />
   </div>
 </template>
 
@@ -36,8 +31,16 @@ export default {
     },
     async fetch() {
       this.loading = true;
-      const { page, limit } = this;
-      await this.fetchPosts({ page, limit });
+      try {
+        const { page, limit } = this;
+        await this.fetchPosts({ page, limit });
+      } catch (err) {
+        let message = "Не удалось загрузить посты";
+        if (err.response) {
+          message += `. Код ошибки: ${err.response.status}`;
+        }
+        this.alert(message, "is-danger");
+      }
       this.loading = false;
     },
   },

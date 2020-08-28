@@ -1,14 +1,8 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
     <form class="section" @submit.prevent="handleSubmit(create)">
-      <h1 class="title has-text-centered has-text-dark">
-        Создание поста
-      </h1>
-      <ValidationProvider
-        rules="required"
-        name="Title"
-        v-slot="{ errors, valid }"
-      >
+      <h1 class="title has-text-centered has-text-dark">Создание поста</h1>
+      <ValidationProvider rules="required" name="Title" v-slot="{ errors, valid }">
         <b-field
           label="Title"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
@@ -18,33 +12,19 @@
         </b-field>
       </ValidationProvider>
 
-      <ValidationProvider
-        rules="required"
-        name="Description"
-        v-slot="{ errors, valid }"
-      >
+      <ValidationProvider rules="required" name="Description" v-slot="{ errors, valid }">
         <b-field
           label="Description"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
         >
-          <b-input
-            v-model="description"
-            type="textarea"
-            placeholder="Description"
-          ></b-input>
+          <b-input v-model="description" type="textarea" placeholder="Description"></b-input>
         </b-field>
       </ValidationProvider>
 
       <div class="field is-grouped mt-4">
         <div class="control">
-          <b-button
-            class="button is-primary"
-            :loading="loading"
-            native-type="submit"
-          >
-            Create
-          </b-button>
+          <b-button class="button is-primary" :loading="loading" native-type="submit">Create</b-button>
         </div>
       </div>
     </form>
@@ -70,24 +50,21 @@ export default {
   mixins: [alert],
   methods: {
     ...mapActions("post", ["createPost"]),
-    create() {
+    async create() {
       this.loading = true;
-      const { title, description } = this;
-      this.createPost({ title, description })
-        .then(() => {
-          this.alert("Пост создан!");
-          this.exit();
-        })
-        .catch((err) => {
-          let message = "Что-то пошло не так";
-          if (err.response) {
-            message += `. Код ошибки: ${err.response.status}`;
-          }
-          this.alert(message, "is-danger");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      try {
+        const { title, description } = this;
+        await this.createPost({ title, description });
+        this.alert("Пост создан!");
+        this.exit();
+      } catch (err) {
+        let message = "Не удалось создать пост!";
+        if (err.response) {
+          message += `. Код ошибки: ${err.response.status}`;
+        }
+        this.alert(message, "is-danger");
+      }
+      this.loading = false;
     },
     exit() {
       this.$router.push("/");

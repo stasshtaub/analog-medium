@@ -3,6 +3,7 @@ export default {
     alert(
       message,
       type = "is-success",
+      onAction = () => {},
       position = "is-top-left",
       queue = false,
       duration = 2000
@@ -10,6 +11,7 @@ export default {
       this.$buefy.snackbar.open({
         message,
         type,
+        onAction,
         position,
         queue,
         duration,

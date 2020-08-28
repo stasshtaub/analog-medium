@@ -1,14 +1,10 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
     <form class="section" @submit.prevent="handleSubmit(save)">
-      <h1 class="title has-text-centered has-text-dark">
-        {{ $route.params.post ? "Редактирование" : "Создание" }} поста
-      </h1>
-      <ValidationProvider
-        rules="required"
-        name="Title"
-        v-slot="{ errors, valid }"
-      >
+      <h1
+        class="title has-text-centered has-text-dark"
+      >{{ $route.params.post ? "Редактирование" : "Создание" }} поста</h1>
+      <ValidationProvider rules="required" name="Title" v-slot="{ errors, valid }">
         <b-field
           label="Title"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
@@ -18,38 +14,22 @@
         </b-field>
       </ValidationProvider>
 
-      <ValidationProvider
-        rules="required"
-        name="Description"
-        v-slot="{ errors, valid }"
-      >
+      <ValidationProvider rules="required" name="Description" v-slot="{ errors, valid }">
         <b-field
           label="Description"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
         >
-          <b-input
-            v-model="editedPost.description"
-            type="textarea"
-            placeholder="Description"
-          ></b-input>
+          <b-input v-model="editedPost.description" type="textarea" placeholder="Description"></b-input>
         </b-field>
       </ValidationProvider>
 
       <div class="field is-grouped mt-4">
         <div class="control">
-          <b-button class="button" @click="exit">
-            Cancel
-          </b-button>
+          <b-button class="button" @click="exit">Cancel</b-button>
         </div>
         <div class="control">
-          <b-button
-            class="button is-primary"
-            :loading="loading"
-            native-type="submit"
-          >
-            Save
-          </b-button>
+          <b-button class="button is-primary" :loading="loading" native-type="submit">Save</b-button>
         </div>
       </div>
     </form>
@@ -89,53 +69,42 @@ export default {
   },
   methods: {
     ...mapActions("post", ["updatePost"]),
-    save() {
+    async save() {
       this.loading = true;
-      this.updatePost(this.editedPost)
-        .then(() => {
-          this.alert("Пост успешно изменён!");
-          this.exit();
-        })
-        .catch((err) => {
-          let message = "Что-то пошло не так";
-          if (err.response) {
-            message += `. Код ошибки: ${err.response.status}`;
-          }
-          this.alert(message, "is-danger");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    async fetchPost(id) {
-      return new Promise((resolve, reject) => {
-        axios
-          .get(`/posts/${id}`)
-          .then((resp) => {
-            resolve(resp.data);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
+
+      try {
+        await this.updatePost(this.editedPost);
+        this.alert("Пост успешно изменён!");
+        this.exit();
+      } catch (err) {
+        let message = "Не удалось изменить пост";
+        if (err.response) {
+          message += `. Код ошибки: ${err.response.status}`;
+        }
+        this.alert(message, "is-danger");
+      }
+
+      this.loading = false;
     },
     exit() {
       this.$router.push("/");
     },
   },
   async created() {
-    if (!this.post) {
-      await this.fetchPost(this.id).then((p) => {
-        this.editedPost = p;
-      });
-    } else {
-      this.editedPost = this.post;
-    }
-
-    if (this.editedPost.userId == this.user.id) {
-      this.postLoading = false;
-    } else {
-      this.exit();
+    try {
+      this.editedPost =
+        this.post || (await axios.get(`/posts/${this.id}`)).data;
+      if (this.editedPost.userId == this.user.id) {
+        this.postLoading = false;
+      } else {
+        this.exit();
+      }
+    } catch (err) {
+      let message = "Не удалось загрузить пост";
+      if (err.response) {
+        message += `. Код ошибки: ${err.response.status}`;
+      }
+      this.alert(message, "is-danger");
     }
   },
 };
