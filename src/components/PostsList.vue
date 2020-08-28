@@ -2,7 +2,7 @@
   <div class="posts-list">
     <ul>
       <li v-for="post in posts" :key="post.id">
-        <post class="mb-4" :post="post" @delete="onDeleteCLick" />
+        <post class="mb-4" v-bind="post" @delete="onDeleteCLick" />
       </li>
     </ul>
     <b-modal
